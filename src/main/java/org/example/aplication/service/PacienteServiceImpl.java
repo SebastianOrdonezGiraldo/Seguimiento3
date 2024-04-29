@@ -6,35 +6,27 @@ import org.example.interfaces.PacienteService;
 
 import java.util.List;
 
-public class PacienteServiceImpl implements PacienteService {
+public class PacienteServiceImpl extends PacienteService {
     private final PacienteRepository pacienteRepository;
 
     public PacienteServiceImpl(PacienteRepository pacienteRepository) {
+        super(pacienteRepository);
         this.pacienteRepository = pacienteRepository;
     }
 
-    @Override
-    public void agregarPaciente(Paciente paciente) {
+    public void guardarPaciente(Paciente paciente) {
         pacienteRepository.guardarPaciente(paciente);
     }
 
-    @Override
     public List<Paciente> obtenerTodosPacientes() {
         return pacienteRepository.obtenerTodosPacientes();
     }
 
-    @Override
     public Paciente obtenerPacientePorId(int id) {
-        return pacienteRepository.obtenerPacientePorId(id);
-    }
-
-    @Override
-    public void actualizarPaciente(Paciente paciente) {
-        pacienteRepository.actualizarPaciente(paciente);
-    }
-
-    @Override
-    public void eliminarPaciente(int id) {
-        pacienteRepository.eliminarPaciente(id);
+        List<Paciente> pacientes = pacienteRepository.obtenerTodosPacientes();
+        return pacientes.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -6,15 +6,16 @@ import org.example.interfaces.MedicoService;
 
 import java.util.List;
 
-public class MedicoServiceImpl implements MedicoService {
+public class MedicoServiceImpl extends MedicoService {
     private final MedicoRepository medicoRepository;
 
     public MedicoServiceImpl(MedicoRepository medicoRepository) {
+        super(medicoRepository);
         this.medicoRepository = medicoRepository;
     }
 
     @Override
-    public void agregarMedico(Medico medico) {
+    public void guardarMedico(Medico medico) {
         medicoRepository.guardarMedico(medico);
     }
 
@@ -25,16 +26,10 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     public Medico obtenerMedicoPorId(int id) {
-        return medicoRepository.obtenerMedicoPorId(id);
-    }
-
-    @Override
-    public void actualizarMedico(Medico medico) {
-        medicoRepository.actualizarMedico(medico);
-    }
-
-    @Override
-    public void eliminarMedico(int id) {
-        medicoRepository.eliminarMedico(id);
+        List<Medico> medicos = medicoRepository.obtenerTodosMedicos();
+        return medicos.stream()
+                .filter(m -> m.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 }
